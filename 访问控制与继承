@@ -2,13 +2,14 @@
 class Base{
 public:
     int pub_mem();
-private:
-    char priv_mem;
+    friend class Pal；       //Pal友元可以正常访问Base的派生类，这种友元关系只对做出声明的类有效
 protected:
     int prot_mem;
+private:
+    char priv_mem;
 };
 //受保护的成员
-class Sneaky : public Base {
+class Sneaky : public Base {        //class 默认private继承， struct 默认public继承
     friend void clobber(Sneaky &s) { //能访问Sneaky：：prot_mem
         s.j = s.prot_mem = 0;       //✅ clobber可访问Sneaky对象的private和protected成员
     }
@@ -49,3 +50,29 @@ struct Derived_from_Private : public Priv_Derv {
         return prot_mem;    //❌ Base::prot_mem在Priv_Derv中是private的
     }
 };
+//友元与继承
+class Pal {
+public:
+    int f(Base b) {
+        return b.prot_mem;      //Pal是Base友元，正常访问Protected的成员
+    }
+    int f2(Sneaky s) {
+        return s.j;         //❌ Pal不是Sneaky的友元
+    }
+    int f3(Sneaky s) {
+        return s.prot_mem;      //✅ Pal是Base的友元，可访问Base对象的成员，即使是内嵌在Base的派生类的对象中的对象，也可访问。
+    }
+};
+//把Pal类声明为Base的友元时，这种友元关系只对做出声明的类有效。
+class D2 : public Pal {
+public:
+    int mem(Base b) {
+        return b.prot_mem;      //❌ 友元关系不能继承
+    }
+};
+//提供using声明改变派生类继承的某个名字的访问级别
+//using声明语句出现在类的private部分，类的成员和友元可访问该名字
+//using声明语句出现在类的public部分，类的所有用户可访问该名字
+//using声明语句出现在类的protected部分，类的成员和友元和派生类可访问该名字
+
+
