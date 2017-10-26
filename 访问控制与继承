@@ -1,8 +1,13 @@
-/* Robin007 -- 访问控制与继承 */
+//
+// Created by Robin on 10/26/17.
+//
+
+#pragma once
+
 class Base{
 public:
     int pub_mem();
-    friend class Pal；       //Pal友元可以正常访问Base的派生类，这种友元关系只对做出声明的类有效
+    friend class Pal;       //Pal友元可以正常访问Base的派生类，这种友元关系只对做出声明的类有效
 protected:
     int prot_mem;
 private:
@@ -17,6 +22,7 @@ class Sneaky : public Base {        //class 默认private继承， struct 默认
         b.prot_mem = 0;            //❌不可访问Base的protect成员
     }
     int j;                      //j 默认private
+    void memfcn(Base &b) { b = *this; }
 };
 //Public private protected继承
 struct Pub_Derv : public Base{
@@ -26,29 +32,35 @@ struct Pub_Derv : public Base{
     char g() {
         return priv_mem;     //❌派生类不可访问private成员
     }
+    void memfcn(Base &b) { b = *this; }
 };
 struct Priv_Derv : private Base{
     //private不影响派生类对Base访问权限，控制派生类用户及其派生类的派生类们对Base成员的访问
     int f1() const {
-        return prot_mem;    
+        return prot_mem;
     }
+    void memfcn(Base &b) { b = *this; }
 };
-//用户
-Pub_Derv d1;    //继承自Base的成员是public的
-Priv_Derv d2;   //继承自Base的成员是private的
-d1.pub_mem();   // ✅ pub_mem在派生类是public的
-d2.pub_mem();   // ❌ pub_mem在派生类是private的
+struct Prot_Derv : protected Base {
+    void memfcn(Base &b) { b = *this; }
+};
 //派生类的派生类
 struct Derived_from_Public : public Pub_Derv {
     int use_base() {
         return prot_mem;    //✅ Base::prot_mem在Pub_Derv中依然是protected的
     }
+    void memfcn(Base &b) { b = *this; }
 };
 
 struct Derived_from_Private : public Priv_Derv {
     int use_base() {
         return prot_mem;    //❌ Base::prot_mem在Priv_Derv中是private的
     }
+    void memfcn(Base &b) { b = *this; }  //不合法❌ Base是private的
+};
+
+struct Derived_from_Protected : protected Prot_Derv {
+    void memfcn(Base &b) { b = *this; }
 };
 //友元与继承
 class Pal {
@@ -70,9 +82,26 @@ public:
         return b.prot_mem;      //❌ 友元关系不能继承
     }
 };
+
+//用户
+Pub_Derv d1;
+Priv_Derv d2;
+Prot_Derv d3;
+Derived_from_Public dd1;
+Derived_from_Private dd2;
+Derived_from_Protected dd3;
+
+d1.pub_mem();   // ✅ pub_mem在派生类是public的
+d2.pub_mem();   // ❌ pub_mem在派生类是private的
+
+Base *p = &d1;//✅
+p = &d2;    //❌ Base在Priv_Derv派生类是 private的
+p = &d3;    //❌ Base在Priv_Derv派生类是 protected的
+p = &dd1;   //✅
+p = &dd2;   //❌ Base在Derived_from_ptivate派生类的派生类是 private的
+p = &dd3;   //❌ Base在Derived_from_proveted派生类的派生类是 protected的
+
 //提供using声明改变派生类继承的某个名字的访问级别
 //using声明语句出现在类的private部分，类的成员和友元可访问该名字
 //using声明语句出现在类的public部分，类的所有用户可访问该名字
 //using声明语句出现在类的protected部分，类的成员和友元和派生类可访问该名字
-
-
