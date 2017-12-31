@@ -15,7 +15,8 @@ struct QueueBuffer {
     void deposit(int data){     //deposit -> the producer thread get lock first
         unique_lock<mutex> lk(lock);
         while(deq.size() == capacity){   //wait condition, check CV to see sleep or push.
-            not_full.wait(lk);    //if pool size is full, the producer thread then must sleep
+            not_full.wait(lk);    //if pool size is full, the producer thread then must sleep.
+            //!!!above means: producer thread will push himself into the "not_full" thread queue, and before sleep, it will release his lock first.
         }
         deq.push_back(data);      //otherwise, push the producer thread's data into the thread queue
         lk.unlock();              //release the lock  
@@ -76,8 +77,8 @@ thread它并不是一直在while里面确认condition。它是一直在CV里面�
 step:
 1.acquire lock (就是前面的unique_lock， 每次我们sleep之前都release它了
 2.check condition
-3.是个可以做到的condition的话，跳出while loop做事
-4.condition还是不对的话，一样release刚刚拿的lock，进CV里睡觉。
+3.condition还是不对的话，先release刚刚拿的lock，然后进CV里睡觉。 eg: not_full.wait(lk);
+4.是个可以做到的condition的话，跳出while loop做事,然后release lock。
 
 deposit 过程是：拿锁，确认条件pool满了没有，不满则有位置可以放的话就放一个，放完后release lock, 叫consumer thread queue的人起床，该consumer一个啦。
 fetch 过程是：拿锁，确认条件pool是空的吗，不空则有东西可以拿的话就拿，拿完后release lock, 叫producer thread queue的人起床，你去produce去吧。
