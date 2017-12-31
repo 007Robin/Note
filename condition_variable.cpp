@@ -8,8 +8,8 @@ struct QueueBuffer {
     deque<int> deq;   //use to store value
     int capacity;
     mutex lock;     //the lock all thread share
-    condition_variable not_full;    //condition_variable is where the producer thread sleep at.
-    condition_variable not_empty;    //condition_variable is where the consumer thread sleep at. 
+    condition_variable not_full;    //condition_variable is somewhere that the producer thread sleep at.
+    condition_variable not_empty;    //condition_variable is somewhere that the consumer thread sleep at. 
     
     QueueBuffer(int capacity) : capacity(capacity){}
     void deposit(int data){     //deposit -> the producer thread get lock first
