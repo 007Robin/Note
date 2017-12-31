@@ -40,7 +40,7 @@ class RWLock {
             std::unique_lock<std::mutex> lk(shared);    //acquire lock
             --active_readers;     //reader minus 1
             lk.unlock();          //optional
-            writerQ.notify_one();   //go to wake up a witer thread in writer thread queue
+            writerQ.notify_one();   //go to wake up a writer thread in writer thread queue
         }
 
         void WriteLock() {    //need write in
@@ -57,11 +57,11 @@ class RWLock {
         void WriteUnlock() {    //is writing
             std::unique_lock<std::mutex> lk(shared);
             --active_writers;     //active writer minus 1
-            if(waiting_writers > 0)     //check state, if writers are still exist, go to wake up one in WriteQ
+            if(waiting_writers > 0)     //check state, if writers are still exist, go to wake up one in WriteQ. 
                 writerQ.notify_one();
             else                        //otherwise, no writers is waiting, go to wake up all read threads in readerQ
                 readerQ.notify_all();
-            lk.unlock();
+            lk.unlock();    //notify_one() need to access shared data in above step, so can't unlock first as ReadUnlock.
         }
 };
 int result = 0;
@@ -137,4 +137,19 @@ WriteUnlock:
 2.改变shared data，当前writer里面减一
 3.确认现在state，如果还有writer在等，则wake one thread in wirterQ, 如果没人等了，去reader thread queue里把all read thread叫起，因为多个reader可以同时read
 4.unlock(optional)
+
+Q1:reader拿锁条件是active_reader>0, 那如果reader thread就是超级多，active_reader一直不为0，writer永远拿不到锁怎么办？
+RW lock priority policies
+锁可以被设计为始终优先给reader。read-perferring的RWlock，每当有新的reader进来，它发现有人在read，那它也read，不管writer受得了受不了。
+  |
+  V
+结果就是writer会饿死starve
+write-preferring的Rwlock则改变reader做事的条件即可
+bool no_one_writing(){
+    return waiting_writers == 0 && active_writers == 0;
+}
+这样reader就会等到没有人写也没有人等着写的时候，才会read，只要有writer进来，writer之后的所有reader都得等。
+
+锁，线程多少，均可自定义
 */
+
