@@ -1,30 +1,30 @@
 *BackTracking	//O(N!) 
 class Permute{
-	int *p,
+	int *p;
 	int N;
 public:
-	Permute(int l[], int n) : p(l), N(n) {	heaps(N-1); 	simple(N-1);	}
+	Permute(int l[], int n) : p(l), N(n) {	 heaps(N-1); 	 simple(N-1);	}
 	void heaps(int N) {
-	if(N == 0)  {
-		print();	
-return;
+		if(N == 0)  {
+			print();	
+			return;
+		}
+		for(int i = 0; i <= N; i++) {
+			heaps(N – 1);
+			swap( ( N % 2 != 0 ? p[0] : p[i] ), p[N]);
+		}
 	}
-	for(int i = 0; i <= N; i++) {
-		heaps(N – 1);
-		swap( ( N % 2 != 0 ? p[0] : p[i] ), p[N]);
+	void simple(int N) {
+		if(N == 0)  {
+			print();	
+			return;
+		}
+		for(int i = 0; i <= N; i++) {
+			swap(p[i], p[N]);
+			simple(N – 1);
+			swap(p[i], p[N]);
+		}
 	}
-}
-void simple(int N) {
-	if(N == 0)  {
-		print();	
-return;
-	}
-	for(int i = 0; i <= N; i++) {
-		swap(p[i], p[N]);
-		simple(N – 1);
-		swap(p[i], p[N]);
-}
-}
 };
 *Magic Square
 class MagicSquare{
@@ -86,35 +86,35 @@ int Nqueen(int n) {
 	return res;
 }
 void helper(int n, vector<int>& pos, int row, int& res) {
-if(row == n) {res++; return;}
-int col;
-for(col = 0; col < n; col++) {
+	if(row == n) {res++; return;}
+	int col;
+	for(col = 0; col < n; col++) {
 		bool flag = true;
 		for(int queen = 0; queen < row; queen++)  {
 			if(pos[queen] == col || pos[queen] – queen == col – row || pos[queen] + queen == col + row)  {
 				flag = false;	
-break;
+				break;
 			}
 		}
 		if(flag) {
 			pos[row] = col;
 			helper(n, pos, row + 1, res);
 		}
-}
+	}
 }
 *sudoku //剪枝不剪枝时间复杂度O(n^(n^2)) 与O((n!)^n)
 *DFS 	Time Complexity: O(V+E) ~ O(V^2)
 void enterDFS(int v){ 
-vector<bool> visited(V, false); 
-DFS(v, visited); 
+	vector<bool> visited(V, false); 
+	DFS(v, visited); 
 }
 DFS(int v, vector<bool> visited) {
-visited[v] = true;
+	visited[v] = true;
 	cout << v << “ “;
 	list<int>::iterator i;
 	for(i = adj[v].begin(); i!= adj[v].end(); i++) {
 		if(!visited[*i])
-DFS(*i, visited);
+			DFS(*i, visited);
 	}
 }
 //O(V^2)
@@ -202,7 +202,7 @@ void Floyd-Warshall(int g[][V]) {
 				path[i][j] = j;
 			else 
 				path[i][j] = -1;		
-  }
+  		}
 	}
 	for(k = 0; k < V; k++)  {
 		for(i = 0; i < V; i++) {
@@ -210,7 +210,7 @@ void Floyd-Warshall(int g[][V]) {
 				if(dist[i][j] > dist[i][k] + dist[k][j])  {
 					dist[i][j] = dist[i][k] + dist[k][j];
 					path[i][j] = path[i][k]; 
-}
+				}
 			}
 		}
 	}
