@@ -15,10 +15,10 @@ private:
 };
 //受保护的成员prot_mem
 class Sneaky : public Base {        //class 默认private继承， struct 默认public继承
-    friend void clobber(Sneaky &s) { //能访问Sneaky::prot_mem
+    friend void clobber(Sneaky &s) { //友元能访问Sneaky::prot_mem
         s.j = s.prot_mem = 0;       //✅ clobber可访问Sneaky对象的private和protected成员
     }
-    friend void clobber(Base &b) { //不能访问Base::prot_mem
+    friend void clobber(Base &b) { //友元不能访问Base::prot_mem
         b.prot_mem = 0;            //❌不可访问Base的protect成员
     }
     int j;                      //j 默认private
