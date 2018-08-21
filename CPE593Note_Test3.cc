@@ -142,11 +142,11 @@ public:
 	bool containsPrefix(string word) {
 		Node *p = root;
 		for( inti  = 0; i < word.size(); i++) {
-	if(p->next[word[i] – ‘a’] == nullptr) 	
-		return false;	
-	p = p->next[word[i] – ‘a’];
-}
-return true;
+			if(p->next[word[i] – ‘a’] == nullptr) 	
+				return false;	
+			p = p->next[word[i] – ‘a’];
+		}
+		return true;
 	}
 };
 
