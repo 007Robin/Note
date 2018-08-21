@@ -276,7 +276,7 @@ return;
 		for( ; q != tail; p = q; q= q->next) 		//q at last, p is q’s prev
 			;
 		tail = p;	
-tail->next = nullptr;
+		tail->next = nullptr;
 		delete q;	
 }
 };
@@ -295,7 +295,7 @@ public:
 		for(Node* p = head; p != nullptr;) {
 			Node* q = p;
 			p = p->next; 
-delete [] q;
+			delete [] q;
 		}
 	}
 	void addStart(int v) {	//O(1)
@@ -303,7 +303,7 @@ delete [] q;
 		Node* t = new Node(nullptr, v, oldhead);
 		head = t;
 		head->prev = nullptr;
-}
+	}
 	void addEnd(int v) {	//O(n)
 		if(head == nullptr) {
 			Node* t = new Node( nullptr, v, nullptr) ;
@@ -315,7 +315,7 @@ delete [] q;
 			;
 		Node* t = new Node( p, v, nullptr);
 		p->next = t;
-}
+	}
 	void removeStart() {
 	if(head == nullptr) return;
 	if(head->next == nullptr)  {
@@ -328,7 +328,7 @@ delete [] q;
 	head = head->next;
 	head->prev = nullptr;
 	delete p;
-}
+	}
 	void removeEnd() {	//O(n)
 	if(head == nullptr) return;
 	if(head->next == nullptr)  {
@@ -339,11 +339,11 @@ delete [] q;
 	}
 	Node* p = head;
 	for( ; p->next->next != nullptr; p = p->next)
-;
+		;
 		Node* last = p->next;
 		p->next = nullptr;	
 		delete last;
-}
+	}
 };
 DoubleLinkedList 2
 class DoubleLinkedList2 {
@@ -352,29 +352,29 @@ class DoubleLinkedList2 {
 		Node* next;
 		Node* prev;
 		Node(Node* prev, int v, Node* next) :prev(prev), data(v), next(next) {} 
-}
-Node* head;
-Node* tail;
+	}
+	Node* head;
+	Node* tail;
 public:
 	DoubleLinkedlist2 () : head(nullptr) , tail(nullptr) {}
 	~DoubleLinkedList2() {
 		for(Node* p = head; p != nullptr;) {
 			Node* q = p;
 			p = p->next;
-delete [] q;
+			delete [] q;
 		}
 		tail = nullptr;
 	}
 	void addStart(int v) {
-	Node* t = new Node(nullptr, v, head);
-	if(head == nullptr) {
-		head = tail = temp;
-}
-else {
-	head->prev = t;
-	head = t;
-}
-}
+		Node* t = new Node(nullptr, v, head);
+		if(head == nullptr) {
+			head = tail = temp;
+		}
+		else {
+			head->prev = t;
+			head = t;
+		}
+	}
 	void addEnd(int v) {
 		Node* t =  new Node(tail, v, nullptr);
 		if(tail = nullptr)
@@ -383,19 +383,19 @@ else {
 			tail->next = t;
 			tail = t;
 		}
-}
+	}
 	void removeStart() {
 		if(head == nullptr)	return;
 		if(head == tail) {
 			delete head;
 			head = tail = nullptr;
 			return;
-}
-Node* t = head;
-head = head->next;
-head->prev = nullptr;
-delete t;
-}
+		}
+		Node* t = head;
+		head = head->next;
+		head->prev = nullptr;
+		delete t;
+	}
 	void removeEnd() {
 		if(tail == nullptr)	return;
 		if(tail == head) 	{
@@ -407,7 +407,7 @@ delete t;
 		tail = seclast;
 		seclast->next = nullptr;
 		delete tail;
-}
+	}
 };
 Stack
 class Stack{
