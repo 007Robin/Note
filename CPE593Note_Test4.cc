@@ -26,6 +26,7 @@ public:
 		}
 	}
 };
+
 *Magic Square
 class MagicSquare{
 	int *s, n, rowSum;
@@ -102,7 +103,9 @@ void helper(int n, vector<int>& pos, int row, int& res) {
 		}
 	}
 }
+
 *sudoku //剪枝不剪枝时间复杂度O(n^(n^2)) 与O((n!)^n)
+	
 *DFS 	Time Complexity: O(V+E) ~ O(V^2)
 void enterDFS(int v){ 
 	vector<bool> visited(V, false); 
@@ -134,6 +137,7 @@ vector<bool> visited(V, false); 		//O(V)
 		}
 	}
 }
+
 *BFS	Time Complexity: O(V+E) ~ O(V^2)
 void iterativeBFS(int v) {
 vector<bool> visited(V, false); 
@@ -188,6 +192,7 @@ void BellmanFord(int start) {
 		}
 	}
 }
+
 *Floyd-Warshall: find the cheapest way to get from anywhere to anywhere
 	Bellman-Ford and Floyd-Warshall with path tracking
 //Time complexity - O(v^3)
