@@ -1,3 +1,4 @@
+时间复杂度=方案个数*构造一个方案度时间复杂度 Subsets O(2^n * n), Permulation O(n! *n).
 Subsets 1 2 3
 [] [1] [1,2] [1,2,3] [1,3] [2] [2,3] [3]
 Subsets要所有内部不重复的节点，所以一进入dfs就res.add
