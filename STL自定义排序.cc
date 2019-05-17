@@ -15,7 +15,7 @@ set<pair<int, int>, Compare> s;
 
 写法二：（lamda)
 auto cmp = [](const ListNode* a, const ListNode* b) {
-            a.val > b.val;      //形成一个最小堆, 执行q.top()先出小元素
+            return a.val > b.val;      //形成一个最小堆, 执行q.top()先出小元素
         };  
 priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> q(cmp);     
 
