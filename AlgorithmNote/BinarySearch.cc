@@ -51,4 +51,5 @@ sort array是前提，在sort的东西里search才可。
 			R = mid
 
 378.Kth Smallest Element in a Sorted Matrix
-719Find K-th Smallest Pair Distance
+668.kth-smallest-number-in-multiplication-table
+719.Find K-th Smallest Pair Distance
