@@ -1,7 +1,7 @@
 写法一：(struct)
 struct compare {
     bool operator()(const ListNode* a, const ListNode* b) {
-        return a->val > b->val;
+        return a->val > b->val;     //形成一个最小堆, 执行q.top()先出小元素
     }
 };
 priority_queue<ListNode*, vector<ListNode*>, compare> q;
@@ -14,13 +14,19 @@ struct Compare{
 set<pair<int, int>, Compare> s;
 
 写法二：（lamda)
+auto cmp = [](const ListNode* a, const ListNode* b) {
+            a.val > b.val;      //形成一个最小堆, 执行q.top()先出小元素
+        };  
+priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> q(cmp);     
+
 auto cmp = [](const pair<string, int>& a, const pair<string, int>& b) {
             return a.second > b.second || (a.second == b.second && a.first < b.first);
         };
 priority_queue<pair<string, int>, vector<pair<string, int>>, decltype(cmp)> q(cmp);
 
+
 写法三：（simpler lamda）
 vector<vector<int>> courses；
 sort(courses.begin(), courses.end(), [](const vector<int>& a, const vector<int>& b) {
-            return a[1] < b[1];
+            return a[1] < b[1];             //由小到大排序
 });
