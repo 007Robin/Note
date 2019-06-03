@@ -1,11 +1,12 @@
 depth: node v to root longest path length. Root's depth is 0.
 height: node v to leaf max height, Tree height means root's height.
+
 Traverse VS Divide Conquer
 1. Both recursion
 2. Result in parameter or Result in return value
 3. Top down or Bottom up
 
-前序 = 根—>左—>右；
+*** 前序 = 根—>左—>右；
 *** 前序遍历preorder //O(n)
 1) Traverse 特点：有个全局变量result, 函数不需要返回参数，返回void即可。改变了原有参数（工程避免这么用）
 //把root为根的preorder加入result里面
@@ -39,7 +40,7 @@ vector<int> preorder(root) {
 		} 
 	} 
 	return result；
-中序 = 左—>根—>右；
+*** 中序 = 左—>根—>右；
 *** 中序遍历inorder
 1) Non-recursion/Stack
 将根节点p压入栈，和其所有左子结点压入栈
@@ -60,7 +61,8 @@ vector<int> inorderTraversal(TreeNode* root) {
 	}       
 	return res;
 }
-后序 = 左—>右—>根。
+173. Binary Search Tree Iterator   
+*** 后序 = 左—>右—>根。
 *** 后序遍历postorder
 1) Non-recursion/Stack
 多一个prev变量: 存postorder的上一个处理的节点
@@ -121,12 +123,19 @@ vector<vector<int>> levelOrder(TreeNode* root) {
 	}
 	return res;
 }
-2) DFS 递归 curlevel从0开始，每结束一层，maxlevel++
-void helper(root, vector<int> level, curlevel, maxlevel) {
-	if(!root || curlevel > maxlevel) return;
-	if(curlevel == maxlevel) level.push_back(root->val);
-	helper(root->left, level, curlevel+1, maxlevel);
-	helper(root->right, level, curlevel+1, maxlevel);
+2) DFS 递归 curlevel从0开始,由于递归的特性，我们会一直深度优先去处理左子结点，势必会穿越不同的层，当要加入某个结点的时候，必须要知道当前的深度，使用一个变量level来标记当前的深度，初始化带入0，表示根结点所在的深度。
+由于需要返回的是一个二维数组res，开始时我们又不知道二叉树的深度，不知有多少层，所以无法事先申请好二维数组的大小，只有在遍历的过程中，当level等于数组的长度时，新建一个空层，继续往里面加数字不断的增加。
+vector<vector<int>> levelOrder(TreeNode* root) {
+	vector<vector<int>> res;
+	levelorder(root, 0, res);
+	return res;
+}
+void levelorder(TreeNode* node, int level, vector<vector<int>>& res) {
+	if (!node) return;
+	if (res.size() == level) res.push_back({});
+	res[level].push_back(node->val);
+	if (node->left) levelorder(node->left, level + 1, res);
+	if (node->right) levelorder(node->right, level + 1, res);
 }
 *** LCA最近祖先问题
 在root为根的二叉树中找A，B的最近祖先LCA
@@ -148,8 +157,8 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 		return NULL;
 }
 *** Path sum 问题
-113. Path Sum II (list all paths, root-any
-437. Path Sum III (how many paths, any-any
+113. Path Sum II (list all paths, 
+437. Path Sum III (how many paths, 
 Traverse模版
 void helper(root, targetsum, vector<int> path, res) {
 1.	if(!root) return;
