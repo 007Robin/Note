@@ -40,6 +40,7 @@ vector<int> preorder(root) {
 		} 
 	} 
 	return result；
+
 *** 中序 = 左—>根—>右；
 *** 中序遍历inorder
 1) Non-recursion/Stack
@@ -62,16 +63,17 @@ vector<int> inorderTraversal(TreeNode* root) {
 	return res;
 }
 173. Binary Search Tree Iterator   
+
 *** 后序 = 左—>右—>根。
 *** 后序遍历postorder
 1) Non-recursion/Stack
 多一个prev变量: 存postorder的上一个处理的节点
-(p || !st.empty())循环
-先让所选节点p的左儿子全部入栈，当走空时，弹栈顶元素t, 去判断t有没有右儿子
-if(t有右儿子&&右儿子不是该节点postorder的上一个节点）
-	则把节点p更新为t的右儿子
-else 
-	栈顶的值入result, 更新prev为t, pop栈顶
+	while(p || !st.empty())循环
+		//先让所选节点p的左儿子全部入栈，当走空时，弹栈顶元素t, 去判断t有没有右儿子
+		if(t有右儿子&&右儿子不是该节点postorder的上一个节点）
+			//则把节点p更新为t的右儿子
+		else 
+			//栈顶的值入result, 更新prev为t, pop栈顶
 
 vector<int> postorderTraversal(TreeNode* root) {
 	vector<int> res;
@@ -123,20 +125,26 @@ vector<vector<int>> levelOrder(TreeNode* root) {
 	}
 	return res;
 }
-2) DFS 递归 curlevel从0开始,由于递归的特性，我们会一直深度优先去处理左子结点，势必会穿越不同的层，当要加入某个结点的时候，必须要知道当前的深度，使用一个变量level来标记当前的深度，初始化带入0，表示根结点所在的深度。
-由于需要返回的是一个二维数组res，开始时我们又不知道二叉树的深度，不知有多少层，所以无法事先申请好二维数组的大小，只有在遍历的过程中，当level等于数组的长度时，新建一个空层，继续往里面加数字不断的增加。
+2) DFS 递归 
+//curlevel从0开始,由于递归的特性，我们会一直深度优先去处理左子结点，势必会穿越不同的层，当要加入某个结点的时候，必须要知道当前的深度，使用一个变量level来标记当前的深度，初始化带入0，表示根结点所在的深度。
+//由于需要返回的是一个二维数组res，开始时我们又不知道二叉树的深度，不知有多少层，所以无法事先申请好二维数组的大小，只有在遍历的过程中，当level等于数组的长度时，新建一个空层，继续往里面加数字不断的增加。
 vector<vector<int>> levelOrder(TreeNode* root) {
 	vector<vector<int>> res;
 	levelorder(root, 0, res);
 	return res;
 }
 void levelorder(TreeNode* node, int level, vector<vector<int>>& res) {
-	if (!node) return;
-	if (res.size() == level) res.push_back({});
+	if (!node) 
+		return;
+	if (res.size() == level) 
+		res.push_back({});
 	res[level].push_back(node->val);
-	if (node->left) levelorder(node->left, level + 1, res);
-	if (node->right) levelorder(node->right, level + 1, res);
+	if (node->left) 
+		levelorder(node->left, level + 1, res);
+	if (node->right) 
+		levelorder(node->right, level + 1, res);
 }
+
 *** LCA最近祖先问题
 在root为根的二叉树中找A，B的最近祖先LCA
 1) 给了父亲parent指针，这种将两个节点p,q的父节点序列找出，然后翻转两序列，找翻转后序列的最后一组相等的父节点即最近。
@@ -156,6 +164,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 	else
 		return NULL;
 }
+
 *** Path sum 问题
 113. Path Sum II (list all paths, 
 437. Path Sum III (how many paths, 
@@ -171,6 +180,7 @@ void helper(root, targetsum, vector<int> path, res) {
 	//当前子树处理完毕，pop该节点，回溯上一个
 5.	path.pop_back();
 }
+
 **** Maximum Path Sum root to any 
   		1
 	   2  3
@@ -188,10 +198,13 @@ int maxPathSum(root) {
 
 **** Maximum Path Sum any to any 
 124. Binary Tree Maximum Path Sum
-整棵树的res与左右子树的最长路径有3种联系:
-1.res就在left里;  2.在right里;  3.在left跨过根到right里 = 最长(左子树根—Any) + 最长(右子树—Any) + (根)
-定义root_anyPath = 根到any节点可以不包含任何点，所以最后要与0比一下; 
-any_anyPath = any—any至少包含一点，所以不需要与0比;
+//整棵树的res与左右子树的最长路径有3种联系:
+	1.res就在left里;  
+	2.在right里;  
+	3.在left跨过根到right里 = 最长(左子树根—Any) + 最长(右子树—Any) + (根)
+
+//定义root_anyPath = 根到any节点可以不包含任何点，所以最后要与0比一下; 
+//any_anyPath = any—any至少包含一点，所以不需要与0比;
 ResultType helper(root){
 	if(!root) return ResultType(0, INT_MIN);
 	//divide

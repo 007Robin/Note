@@ -1,10 +1,16 @@
 --------------------- 
 搜索问题的解法
-	BFS（广度优先搜索）
-	DFS（深度优先搜索）
-	backtracking（回溯）
+	
+	BFS（广度优先搜索）走到一个节点，遍历完该点的下一层的所有节点，然后处理下一层的第一个点
+	使用情况：图由点及面的搜索(DFS会很深)，简单图最短路径(没必要DFS找所有路径)
+	
+	DFS（深度优先搜索）走到一个节点，往下再走一层，能走则继续往深处走，走不通则回到上一层，继续遍历adjacent点
+	使用情况：找所以方案的题目，排列组合问题
+	
+	backtracking（回溯）变过去又变回来
 --------------------- 
-BFS要点 1）用Queue 2）是否需要实现分层
+BFS
+2个要点 1）用Queue 2）是否需要实现分层
 - 模板1 不分层，常用模版
 void bfs(...)
 {
@@ -74,6 +80,8 @@ Search Graph Nodes
 Topological Sorting
 Course Schedule I && II
 Sequence Reconstruction
+Word Ladder I 
+Word Ladder II (BFS + DFS结合） 
 
 3) 棋盘/矩阵 BFS
 R行C列,R*C个点，R*C*2 条边,矩阵中BFS时间复杂度 = O(R * C)
@@ -104,7 +112,10 @@ Zombie in Matrix
 Knight Shortest Path
 
 --------------------- 
-DFS模板
+DFS
+实现方式有2种，1) 递归recursion 2) 非递归non-recursion/用stack方式
+复杂度为 O(答案个数 * 构造每个答案的时间复杂度)
+DFS recursion 模板
 void dfs(...) 
 {
 	// 结束递归的条件
@@ -116,11 +127,66 @@ void dfs(...)
 	// 继续递归，里面可能有回溯，也可能没有
 	if (...) {
 
-		... // 在容器中保存当前数据
-			dfs() 
-			... // 在容器中删除上面保存的数据（注：这种情况下就称为回溯，很明显它是dfs的一个步骤）
+		...push_back // 在容器中保存当前数据
+		dfs(...) 
+		...pop_back() // 在容器中删除上面保存的数据（注：这种情况下就称为回溯，很明显它是dfs的一个步骤）
 	}
 }
 难点
-寻找dfs结束条件
-继续dfs的条件
+该dfs要干什么事／recursion定义
+寻找dfs结束条件／recursion出口
+继续dfs的条件／recursion拆解
+
+DFS的4种应用情况
+1) 组合搜索问题 Combination
+	1.是指从给定n个数的元素中仅仅挑出指定r个数的元素，不考虑排序，求所有满足条件的“组合”／问有几种
+	2.时间复杂度与 2^n 相关。
+    //i表示挑到的当前元素的索引号
+	if (...) ...
+	for i = startIndex -> size
+		push_back(nums[i])
+		helper(i, ...)可重复挑 or helper(i + 1, ...)不可重复挑 
+		pop_back()...
+Subset I
+Subset II
+Combination I
+Combination II
+
+2) 切分划分问题 Partition 等同于组合问题
+	长度为n的string,有n-1个位置可以切，每个位置2种可能性切与不切，一共切法有2^(n-1)种。
+	// i表示切在[startIndex, string.size()]之间的某个位置
+	if (...) ...
+	for i = startIndex -> size 
+		push_back([startIndex, i]之间的子串)
+		helper(i + 1, ...)
+		pop_back()...
+Palindrome Partitioning
+
+3) 排列搜索问题 Permutation
+	1.求出所有满足条件的“排列”
+	2.时间复杂度与 n! 相关
+	3.类似于组合问题，但少了startIndex变量，多了visited数组用于表示数有没有被用过
+	for i = 0 -> size
+		visited[i] = true;
+		push_back(nums[i])
+		helper(...)
+		pop_back()...
+		visited[i] = false;
+
+Permutation
+N queen
+Shudu
+
+4) 树/图／隐式图的深度搜索
+Word Ladder II (BFS + DFS结合） 
+
+2) 非递归non-recursion/用stack方式 DFS
+Tree Traversal
+http://www.jiuzhang.com/solutions/binary-tree-preorder-traversal/
+http://www.jiuzhang.com/solutions/binary-tree-inorder-traversal/ 
+http://www.jiuzhang.com/solutions/binary-tree-postorder-traversal/ 
+http://www.jiuzhang.com/solutions/binary-search-tree-iterator/ 
+Combination
+http://www.jiuzhang.com/solutions/subsets/
+Permutation
+http://www.jiuzhang.com/solutions/permutations/
