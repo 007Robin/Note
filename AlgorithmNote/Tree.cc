@@ -3,7 +3,7 @@ height: node v to leaf max height, Tree height means root's height.
 
 Traverse VS Divide Conquer
 1. Both recursion
-2. Result in parameter or Result in return value
+2. (return void)Result in parameter or (return result)Result in return value
 3. Top down or Bottom up
 
 *** 前序 = 根—>左—>右；
@@ -45,8 +45,8 @@ vector<int> preorder(root) {
 *** 中序遍历inorder
 1) Non-recursion/Stack
 将根节点p压入栈，和其所有左子结点压入栈
-当走空时，逐步弹栈顶t，写入result, 这会满足中序的先左儿子再根
-p走向t的右子(无右子则直接继续去栈顶，res入根，p变为根的右子)
+当走空到最左叶子时，逐步弹栈顶t，写入result(表示遍历了该点）, 这会满足中序的先左儿子再根
+p走向t的右子(有右子：右子的所有左子再一一入栈， 无右子：则会直接继续弹栈顶，根入result，p再变为根的右子)
 vector<int> inorderTraversal(TreeNode* root) {
 	vector<int> res;
 	stack<TreeNode*> st;
@@ -69,10 +69,10 @@ vector<int> inorderTraversal(TreeNode* root) {
 1) Non-recursion/Stack
 多一个prev变量: 存postorder的上一个处理的节点
 	while(p || !st.empty())循环
-		//先让所选节点p的左儿子全部入栈，当走空时，弹栈顶元素t, 去判断t有没有右儿子
-		if(t有右儿子&&右儿子不是该节点postorder的上一个节点）
-			//则把节点p更新为t的右儿子
-		else 
+		//先让所选节点p的左儿子全部入栈，当走空到最左叶子时，弹栈顶元素t, 去判断t有没有右儿子
+		if(t有右儿子 && 右儿子不是该节点postorder的上一个节点(即右子没被遍历过)）
+			//则把节点p更新为t的右儿子, 所走路径为：左—>all右子树点(因下次while(p)把右子树的节点都涵盖了)
+		else //否则要么没右儿子，要么右子树都遍历过了(当t->right=prev表示右子树都遍历完了)，直接处理根节点
 			//栈顶的值入result, 更新prev为t, pop栈顶
 
 vector<int> postorderTraversal(TreeNode* root) {
