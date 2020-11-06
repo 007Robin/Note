@@ -6,6 +6,10 @@ Traverse VS Divide Conquer
 2. (return void)Result in parameter or (return result)Result in return value
 3. Top down or Bottom up
 
+中序遍历因为其sorted的属性，有很多变种题，
+许多题常通过加一个prev变量保存前一个节点状态
+pathSum类的题traverse模版很好用，见文末
+
 *** 前序 = 根—>左—>右；
 *** 前序遍历preorder //O(n)
 1) Traverse 特点：有个全局变量result, 函数不需要返回参数，返回void即可。改变了原有参数（工程避免这么用）
@@ -27,7 +31,7 @@ vector<int> preorder(root) {
 	res.push_back(L);
 	res.push_back(R);
 }
-3) Non-recursion/Stack
+3) Non-recursion/Stack/DFS
 	stack.push(root);   //根入栈，栈非空时循环 
 	while(!stack.empty( )) {      
 		TreeNode node = stack.pop();   //每次将栈弹出的元素      
@@ -43,13 +47,15 @@ vector<int> preorder(root) {
 
 *** 中序 = 左—>根—>右；
 *** 中序遍历inorder
-1) Non-recursion/Stack
-将根节点p压入栈，和其所有左子结点压入栈
-当走空到最左叶子时，逐步弹栈顶t，写入result(表示遍历了该点）, 这会满足中序的先左儿子再根
+1) Non-recursion/Stack/DFS
+借助一个p指针（从根开始），当指针不空||栈不空的时候，进行操作
+循环将根节点p压入栈，和其所有左子结点压入栈
+当走空到最左叶子时，开始逐步弹栈顶t，写入result(表示遍历了该点）, 这会满足中序的先左儿子再根（处理左子树的根
 p走向t的右子(有右子：右子的所有左子再一一入栈， 无右子：则会直接继续弹栈顶，根入result，p再变为根的右子)
 vector<int> inorderTraversal(TreeNode* root) {
 	vector<int> res;
 	stack<TreeNode*> st;
+	//-----------------------> TreeNode* pre = nullptr;
 	TreeNode* p = root;
 	while(p || !st.empty()) {
 		while(p) {          
@@ -57,16 +63,20 @@ vector<int> inorderTraversal(TreeNode* root) {
 			p = p->left;
 		}
 		TreeNode* t = st.top(); st.pop();         
-		res.push_back(t->val);          
+		res.push_back(t->val);     	//------> replace here, do what you what!
+		//-----------------------> pre = t;
 		p = t->right;     
 	}       
 	return res;
 }
+98. Validate Binary Search Tree   -> 需要额外定义个Treenode* pre表示前一个元素
+501. Find Mode in Binary Search Tree  -> 需要额外定义个Treenode* pre表示前一个元素
 173. Binary Search Tree Iterator   
+230. Kth Smallest Element in a BST
 
 *** 后序 = 左—>右—>根。
 *** 后序遍历postorder
-1) Non-recursion/Stack
+1) Non-recursion/Stack/DFS
 多一个prev变量: 存postorder的上一个处理的节点
 	while(p || !st.empty())循环
 		//先让所选节点p的左儿子全部入栈，当走空到最左叶子时，弹栈顶元素t, 去判断t有没有右儿子
@@ -98,7 +108,7 @@ vector<int> postorderTraversal(TreeNode* root) {
 	return res;
 }
 
-*** 二叉树 每层遍历
+*** 二叉树 层序遍历
 1) BFS法  
  2Queues Q1 Q2一个父层一个子层两个来回倒腾
  1Queue + #，一层结束后删#把#加入队尾
@@ -125,6 +135,8 @@ vector<vector<int>> levelOrder(TreeNode* root) {
 	}
 	return res;
 }
+116. Populating Next Right Pointers in Each Node   (加一个prev变量每次存该层前一个元素，然后连next
+117. Populating Next Right Pointers in Each Node II
 2) DFS 递归 
 //curlevel从0开始,由于递归的特性，我们会一直深度优先去处理左子结点，势必会穿越不同的层，当要加入某个结点的时候，必须要知道当前的深度，使用一个变量level来标记当前的深度，初始化带入0，表示根结点所在的深度。
 //由于需要返回的是一个二维数组res，开始时我们又不知道二叉树的深度，不知有多少层，所以无法事先申请好二维数组的大小，只有在遍历的过程中，当level等于数组的长度时，新建一个空层，继续往里面加数字不断的增加。
@@ -144,6 +156,7 @@ void levelorder(TreeNode* node, int level, vector<vector<int>>& res) {
 	if (node->right) 
 		levelorder(node->right, level + 1, res);
 }
+102. Binary Tree Level Order Traversal
 
 *** LCA最近祖先问题
 在root为根的二叉树中找A，B的最近祖先LCA
@@ -167,7 +180,8 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 
 *** Path sum 问题
 113. Path Sum II (list all paths, 
-437. Path Sum III (how many paths, 
+437. Path Sum III (how many paths, (额外一个curSum, 每次比较curSum是否等于targetsum
+129. Sum Root to Leaf Numbers
 Traverse模版
 void helper(root, targetsum, vector<int> path, res) {
 1.	if(!root) return;
@@ -220,6 +234,7 @@ ResultType helper(root){
 } 
 
 *** Divide Conquer分置递归法：!root怎样 左子树怎样 右子树怎样 整体怎样
+95.  Unique Binary Search Trees II
 104. Maximum Depth of Binary Tree
 111. Minimum Depth of Binary Tree
 257. Binary Tree Paths
