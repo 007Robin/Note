@@ -21,7 +21,8 @@ void dfs(vector<vector<int>>& res, vector<int>& v, int pos, vector<int>& nums) {
 去重复问题要选代表处理。调用函数前sort()排序nums，
 并在for循环第一步进行判断，加上
 	if( i != pos && nums[i] == nums[i - 1]) { continue; } 这段即可
-
+同理对于permulatoin:
+	if (i != 0 && nums[i] == nums[i - 1] && visited[i - 1] == false) { continue; }
 
 Permulations 1 2 3
 [1,2,3],
@@ -57,3 +58,48 @@ void dfs(vector<vector<int>>& res, vector<int>& v, vector<int>& nums, vector<int
 	}
 }
 
+
+同模版可以应用于 => DFS的4种应用情况之三
+1) 组合搜索问题 Combination
+	1.是指从给定n个数的元素中仅仅挑出指定r个数的元素，不考虑排序，求所有满足条件的“组合”／问有几种
+	2.时间复杂度与 2^n 相关。
+    //i表示挑到的当前元素的索引号
+	if (...) ...
+	for i = startIndex -> size
+		push_back(nums[i])
+		helper(i, ...)可重复挑 or helper(i + 1, ...)不可重复挑 
+		pop_back()...
+Subset I
+Subset II
+Combination I
+Combination II
+Combination Sum
+Combination Sum II
+Combination Sum III
+
+2) 切分划分问题 Partition 等同于组合问题
+	长度为n的string,有n-1个位置可以切，每个位置2种可能性切与不切，一共切法有2^(n-1)种。
+	// i表示切在[startIndex, string.size()]之间的某个位置
+	if (...) ...
+	for i = startIndex -> size 
+		push_back([startIndex, i]之间的子串)
+		helper(i + 1, ...)
+		pop_back()...
+
+Palindrome Partitioning
+注意其中用到 string的substr函数， 其参数为(size_t pos, size_t len);
+
+3) 排列搜索问题 Permutation
+	1.求出所有满足条件的“排列”
+	2.时间复杂度与 n! 相关
+	3.类似于组合问题，但少了startIndex变量，多了visited数组用于表示数有没有被用过
+	for i = 0 -> size
+		visited[i] = true;
+		push_back(nums[i])
+		helper(...)
+		pop_back()...
+		visited[i] = false;
+
+Permutation
+N queen
+Shudu
