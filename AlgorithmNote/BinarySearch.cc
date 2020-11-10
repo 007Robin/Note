@@ -53,3 +53,35 @@ sort array是前提，在sort的东西里search才可。
 378.Kth Smallest Element in a Sorted Matrix
 668.kth-smallest-number-in-multiplication-table
 719.Find K-th Smallest Pair Distance
+
+
+//****** Binary seach ****** O(logn)
+int binarysearch(int a[], int n, int target) {
+	int L = 0, R = n – 1;
+	while( L < R)  {
+		int mid = L + (R - L )/2;
+		if( a[mid] < target) 
+			L = mid - 1;
+		else if (a[mid] > target) 
+			R = mid - 1;
+		else 
+			return mid;
+	}
+	return -1;
+}
+int binarysearch2(int a[], int n, int target) {
+	int L = 0, R = n – 1;
+	while( L +1 < R ) {
+		int mid = L + (R – L ) /2;
+		if( a[mid] < target) 
+			L = mid;
+		else if ( a[mid] > target) 
+			R = mid;
+		else 
+			return mid;
+	}
+	if(a[L] == target) return L;
+	if(a[R] == target) return R;
+	return -1;
+}
+
