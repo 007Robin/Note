@@ -1,3 +1,7 @@
+//2-d matrix seen as 1-d
+index: 0 ... row*col-1
+at index i, it's pos is matrix[i/col][i%col];
+	
 //******* countPrime ********* O(nlog(logn))
 int countPrime(int n) {
 	if(n < 2) return false;
