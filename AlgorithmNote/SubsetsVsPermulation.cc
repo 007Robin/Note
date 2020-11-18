@@ -88,6 +88,7 @@ Combination Sum III
 
 Palindrome Partitioning
 注意其中用到 string的substr函数， 其参数为(size_t pos, size_t len);
+132. Palindrome Partitioning II (DP动态规划题了，不属于该范畴，https://leetcode.com/problems/palindrome-partitioning-ii/)
 
 3) 排列搜索问题 Permutation
 	1.求出所有满足条件的“排列”
