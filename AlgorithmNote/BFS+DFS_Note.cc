@@ -49,16 +49,18 @@ void bfs(...)
 
 BFS有3种应用情况
 1) 二叉树 BFS in Binary Tree
-102.Binary Tree Level Order Traversal I/107.II
+102.Binary Tree Level Order Traversal I/107.II  (模版一)
+103.Binary Tree Zigzag Order Traversal (模版一， 用到std::reverse)
 297.Binary Tree Serialization
-103.Binary Tree Zigzag Order Traversal
+(熟练用ostringstream, istringstream来存树，用模版一，serialize时存在则写值out << val，不存在用#代替，小技巧：每个数字后面放一个空格，这是为了istringstream读的时候默认按空格划分
+deserialize中istringstream in >> val时不断用val去建new TreeNode, 保证顺序也和serialize一样，先左节点再右节点)
 Convert Binary Tree to Linked Lists by Depth
 
-2) 图 BFS in Graph 
+2) 图 BFS in Graph 内也有三种应用情况
 N个点，M条边, M最大是 O(N^2) 的级,图上BFS时间复杂度 = O(N + M)
 	• 层级遍历 Level Order Traversal
 	• 由点及面 Connected Component
-	• 拓扑排序 Topological Sorting  
+	• 拓扑排序 Topological Sorting 模版
 		分3步：N个vertexes （有时候是Node形式，有时候是数字形式） 
 		1.统计所有点的入度indegree (数组/map都行，只要存 点-入度 映射关系)
 			若边node-->neighbor形式，in[neighbor]++，是neighbor的入度++
@@ -76,9 +78,12 @@ N个点，M条边, M最大是 O(N^2) 的级,图上BFS时间复杂度 = O(N + M)
 Build Post Office	
 Graph Valid Tree
 Clone Graph
+(用unodered_map m建立旧节点和clone点的一一映射关系，queue用来辅助clone的graph，在循环中，取出队首结点t，遍历其所有 neighbor 结点，当该nb不在m中时，说明还没clone过，
+所以要new Node一下该nb 并用其连接一下m[nb], 然后把它加入q便于下轮遍历，当遍历完以后将m[nb]这个所有当clone点push_back到m[t]这个clone点的neighbors数组里即可）
 Search Graph Nodes
 Topological Sorting
-Course Schedule I && II
+Course Schedule I && II  
+(建图，用Topological Sorting 模版123步， I是只用返回true/false， II多加一个res, 记录一下每步走的点，最后无环返回res就行了)
 Sequence Reconstruction
 Word Ladder I 
 Word Ladder II (BFS + DFS结合） 
