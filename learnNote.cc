@@ -109,7 +109,16 @@ lookup--> zero -->
           two  -->
 stack:
 lookup[0]() <=> zero() 
-                     
+     
+Smart Pointer : applied to an object and give the implicit this pointer. 
+unique_ptr  : sole custody to pointee, only movable, std::move(unique pointer)
+sharded_ptr : 有个referenced counted managed pointer
+weak_ptr    : useful when an object needs to be accessed only if it exists
+auto_ptr    : 是pre-cursor to unique_ptr  
+
+C++ Templates
+init at compile time
+declaration and defination must in the same .H file.
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
