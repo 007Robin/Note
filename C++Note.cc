@@ -119,6 +119,24 @@ auto_ptr    : 是pre-cursor to unique_ptr
 C++ Templates
 init at compile time
 declaration and defination must in the same .H file.
+                     
+lambda function
+auto f = [local capture] (optinal_parameters)->optinal_return_type { body };
+f();
+[]
+[=]: all by value
+[&]: all by refer
+[=, &y]: all by value, y by refer
+[&, x]: all by refer, x by value
+[&x, y]: x by refer, y by value, only x,y
+
+process : program executed, becomes process. at least one thread executes concurrently.
+          provide resources needed to execute a program (address space, security context, environment variables)
+          每个进程都有自己的内存地址空间.
+thread  : sequence of instructions that execute independency.
+          线程没有自己独立的内存资源，它只有自己的执行堆栈和局部变量.
+More on: https://blog.csdn.net/honglin_ren/article/details/35839979
+                     
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
