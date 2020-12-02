@@ -119,6 +119,8 @@ auto_ptr    : 是pre-cursor to unique_ptr
 C++ Templates
 init at compile time
 declaration and defination must in the same .H file.
+https://eli.thegreenplace.net/2014/variadic-templates-in-c/
+https://www.modernescpp.com/index.php/c-insights-variadic-templates
                      
 lambda function
 auto f = [local capture] (optinal_parameters)->optinal_return_type { body };
