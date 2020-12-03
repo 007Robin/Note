@@ -52,7 +52,7 @@ eg:  #define sqr(n) (n)*(n)
 const_cast<T> : remove const or volatile
 static_cast<T> : convert to target T, apply at compile time. 不能cast struct to int, float to pointer
 reinterpret_cast<T> : convert to any other pointer type. 能cast int to pointer, struct to fioat
-dynamic_cast<T> : onvert to target T, evaluate at run time
+dynamic_cast<T> : convert to target T, evaluate at run time
   
 declaration : tell compiler just func names and arguments types
 definition  : compiler 在这才 verify argument types numbers
@@ -62,9 +62,17 @@ constexpr constructor xx() const noexcept
 
 Astring *p = new Astring("hello");
 *p在stack上  pointing to --->   在heap上的hello
+在pass by value return value情况下，string copy只copy pointer
+String("world")
+String在stack上，“world”在heap上，
 leak的产生: 因pointer itself都在stack上，stack goes, pointer goes. 如果无reference to／pointing to那块地址，就leak了.
 "xxx"  这种形式但叫string constant，C style, 末尾隐含一个'\0'
 
+shallow copy
+deep copy
+
+copy 直接拿
+assignment sth／object已有，在把别的stuff拿来之前，得先get rid of it first
 #ifndef MAX_H
 #define MAX_H
    int max(int, int);
@@ -89,8 +97,7 @@ eg: int main(int argc, char *argv[])
 
 pointer是有type的，所以type match很重要。
 void pointer: 可point to any type of data， must be cast before dereferenced.
-不可给const 加pointer
-可给const 加const pointer
+不可给const 加pointer 但可加const pointer
 
 Function Pointer常用于event-handle, device, event-driven场景
 用pointer去invoke function foo()
@@ -111,7 +118,8 @@ stack:
 lookup[0]() <=> zero() 
      
 Smart Pointer : applied to an object and give the implicit this pointer. 
-unique_ptr  : sole custody to pointee, only movable, std::move(unique pointer)
+unique_ptr  : exclusive ownership to pointee, only movable, std::move(unique pointer)，
+              moving transfer ownership, cant's copy, two can't have same ownership to the same rescourse. 
 sharded_ptr : 有个referenced counted managed pointer
 weak_ptr    : useful when an object needs to be accessed only if it exists
 auto_ptr    : 是pre-cursor to unique_ptr  
@@ -125,6 +133,8 @@ https://www.modernescpp.com/index.php/c-insights-variadic-templates
 lambda function
 auto f = [local capture] (optinal_parameters)->optinal_return_type { body };
 f();
+[this]: capture class member, pointer, pass by value, copy address
+[*this]: 仍pass by value, 但pass address里面的东西
 []
 [=]: all by value
 [&]: all by refer
@@ -132,13 +142,24 @@ f();
 [&, x]: all by refer, x by value
 [&x, y]: x by refer, y by value, only x,y
 
+std::function<int (int)> f;     //整体像个type
+            return  take      
+ f可 = 任何同type的functions，functor，function pointer，method，lambda
+std::for each
+std::copy_if
+std::bind
+
+RAII: Resource Acquisition Is Initialization    
+
+************* OS/Linux ******************    
+ 
 process : program executed, becomes process. at least one thread executes concurrently.
           provide resources needed to execute a program (address space, security context, environment variables)
           每个进程都有自己的内存地址空间.
 thread  : sequence of instructions that execute independency.
           线程没有自己独立的内存资源，它只有自己的执行堆栈和局部变量.
-More on: https://blog.csdn.net/honglin_ren/article/details/35839979
-                     
+More on: https://blog.csdn.net/honglin_ren/article/details/35839979    
+    
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
