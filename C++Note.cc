@@ -14,7 +14,7 @@ noexcept关键字，说明保证all correct, 让compiler最大去优化
 constexpr关键字，说明everything init／calculate／exec at compiler time, NO runtime, type safe compulation, 是const。 
 
 Const Type        :  value never changes, must init, 不可assigned。
-Volatile Type     : value may change unexpected (prevent variable optimistation)  
+Volatile Type     : value may change unexpected (prevent variable optimistation), 可改，不许optimise  
 eg: volatile const int time{20201201};  
 
 Enumerattion Type : a user-defined set of values 用于代替integer constants。
@@ -85,6 +85,8 @@ C++ Linkage
 extern "C" {    //stop name mangling 阻止命名修饰
     ...//意思是，这里不用compiler给我命名修饰，别处存在，我在这要用
 } 
+global变量: visible to everyone in the program. initialized when task is loaded, usually the value is in the executable(可执行文件.cpp)。 
+define the global variables in source file, declare them "extern" in a header file. 
 
 stactic member function 可access static var/fuc，不可access instance var/fuc
 
@@ -133,6 +135,7 @@ https://www.modernescpp.com/index.php/c-insights-variadic-templates
 lambda function
 auto f = [local capture] (optinal_parameters)->optinal_return_type { body };
 f();
+for move-only type, can't caputre value [up], if capture reference[&up], would with undesirable custody implications, we use [std::move(up)]                     
 [this]: capture class member, pointer, pass by value, copy address
 [*this]: 仍pass by value, 但pass address里面的东西
 []
@@ -149,8 +152,47 @@ std::for each
 std::copy_if
 std::bind
 
-RAII: Resource Acquisition Is Initialization    
+RAII: Resource Acquisition Is Initialization
+1)
+std::mutex mymutex; 
+mymutex.lock();
+//to protect shared data                     
+mymutex.unlock();
+2)                     
+std::lock_guard<std::mutex> guard(mymutex);                     
+3)
+std::unqiue_lock<std::mutex> l1(mymutex1, std::defer_lock);
+std::unqiue_lock<std::mutex> l2(mymutex2, std::defer_lock)
+std::lock(l1, l2);      //避免deadlock
+ 
+std::condition_variable : threads wait on cv, notify on cv
+std::condition_variable cv;
+cv.wait(l1);                            //consuming thread
+cv.notify_one(); or cv.notify_all();    //producing thread                   
+                     
+Constructor cannot be virtual, because when a constructor of a class is executed there is no virtual table in the memory, means no virtual pointer defined yet.
+Virtual destructor/Pure virtual destructors are legal, if a class contains a pure virtual destructor, it must provide a function body for the pure virtual destructor.                     
 
+虚表是什么？多态里面，含virtual function的class，会有一张虚表，里面是存virtual pointer，这些virtual pointer指向子类实例。所以虚表是属于class的，不是instance的。                     
+怎么找虚表？在instance实例时会有个指向虚表的指针。
+
+void task() {cout << "do some work" << endl;}
+std::thread t(task);    //create and start a thread to execute the task function
+t.join();                //wait for thread to complete
+                     
+join() : to synchronise calling thread with specified thread, if main thread stops before child threads, it's error.                     
+detach() : to create daemon thread, it stops when process terminates                     
+
+Callable 可return, Runnable 无return type
+
+Future, Promise用于asynchronous异步通信
+  async lauches a funtion in a new thread returing the value asynchronously.
+  promist stores a value for asynchronous retrieval 
+  future waits for a value set asynchronously. 
+Future: 是一个placeholder代表a value will be available at some time in the future.  is a read-only value
+Promise: used to represent write side, one Promise can be watched by many Futures
+  Thread1 Promise --> set_value() to -->  common_shared_value -->  get() by -->  Furture Thread2 to retrieval this value
+                     
 ************* OS/Linux ******************    
  
 process : program executed, becomes process. at least one thread executes concurrently.
@@ -158,8 +200,26 @@ process : program executed, becomes process. at least one thread executes concur
           每个进程都有自己的内存地址空间.
 thread  : sequence of instructions that execute independency.
           线程没有自己独立的内存资源，它只有自己的执行堆栈和局部变量.
-More on: https://blog.csdn.net/honglin_ren/article/details/35839979    
-    
+More on: https://blog.csdn.net/honglin_ren/article/details/35839979 
+http://dreamrunner.org/blog/2014/08/07/C-multithreading-programming/
+
+多process如何互访：IPC 中的 share memory，通过 mmap 映射共享文件
+多thread如何互访：全局变量，信号量，mutex,condition_variable
+
+信号量semaphore是一个在单核和多核之间都有效的同步手段。多核系统在很多场合 spin lock/自旋锁 比semaphore效率更高。因semaphore在同步时需要对进程进行休眠和唤醒的操作，耗资源。
+spin lock 只有在多核系统上才有效，在单核上是没有用。当获取锁失败时,spinlock 不会让线程进入睡眠,而是不断 poll 去获取这个锁直到获取成功.
+
+unix 系统通过 signal 通知进程相关的系统事件。信号分为2类，异步信号（e.g. SIGINT）和同步信号（e.g. SIGSEGV）。
+
+虚拟内存具有许多的优势和好处：
+  可以支持多进程运行
+  可以支持需求比物理内存更大空间的进程执行
+  不必把程序的所有代码都加载到内存中就可以执行
+  每个进程只能访问属于自己的那部分内存，可以有效地隔离进程
+  进程之间可以共享程序代码
+  程序可以被方便地进行重定向，可以在物理内存的任意地方被加载执行
+  程序编写的时候，可以不用关系物理机器的物理内存结构                     
+                     
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
