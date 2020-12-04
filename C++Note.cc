@@ -122,9 +122,12 @@ lookup[0]() <=> zero()
 Smart Pointer : applied to an object and give the implicit this pointer. 
 unique_ptr  : exclusive ownership to pointee, only movable, std::move(unique pointer)，
               moving transfer ownership, cant's copy, two can't have same ownership to the same rescourse. 
+unique_ptr  : 独占所指向的对象，自动释放所指向内存
 sharded_ptr : 有个referenced counted managed pointer
+sharded_ptr : 允许多个指针指向同一对象，有个reference count来统计，一旦为0则释放
+weak_ptr    : 不控制所指对象生存期，指向由shared_ptr管理的对象
 weak_ptr    : useful when an object needs to be accessed only if it exists
-auto_ptr    : 是pre-cursor to unique_ptr  
+auto_ptr    : 是pre-cursor to unique_ptr 
 
 C++ Templates
 init at compile time
@@ -192,7 +195,14 @@ Future, Promise用于asynchronous异步通信
 Future: 是一个placeholder代表a value will be available at some time in the future.  is a read-only value
 Promise: used to represent write side, one Promise can be watched by many Futures
   Thread1 Promise --> set_value() to -->  common_shared_value -->  get() by -->  Furture Thread2 to retrieval this value
-                     
+
+new 是在动态内存(如heap)上给对象开辟内存空间,返回指向该对象的指针。
+delete和new配套，用来释放内存，删一个动态分配的元素
+new[] 是new分配一个对象数组，返回指向第一个对象的指针
+delete[]和new[]配套，是释放一个动态分配的数组
+malloc同new, 源自于C语言，不像new失败抛出异常，malloc失败返回NULL
+free与malloc配套，作用和delete一样，释放内存。
+
 ************* OS/Linux ******************    
  
 process : program executed, becomes process. at least one thread executes concurrently.
