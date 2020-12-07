@@ -249,7 +249,15 @@ main函数执行前会有哪些事情发生？
   进程之间可以共享程序代码
   程序可以被方便地进行重定向，可以在物理内存的任意地方被加载执行
   程序编写的时候，可以不用关系物理机器的物理内存结构                     
-                     
+
+内存池：
+https://zhuanlan.zhihu.com/p/64719710
+MessageQueue:
+//single producer(writer) multiple consumer(reader) queue                     
+https://github.com/007Robin/spmcqstudy/tree/main/SPMC_Queue_bak
+https://github.com/007Robin/PubSubQueue
+epoll,select,poll区别
+ 
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
