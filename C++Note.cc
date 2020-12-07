@@ -203,6 +203,19 @@ delete[]和new[]配套，是释放一个动态分配的数组
 malloc同new, 源自于C语言，不像new失败抛出异常，malloc失败返回NULL
 free与malloc配套，作用和delete一样，释放内存。
 
+Move semantics Advantage
+  Automatic storage
+  Pilfer resources of the source in order to construct the target with minimum expense
+  Represent non-copyable resources more efficiently, like sockets
+  Treat complex objects as normal values
+
+Pointers Disadvantage
+  Allocate on the free store
+  Not exception-safety
+  Ugly Ownership Issue(for deleting pointer)
+  Does not allow for (RAII)Resource acquisition is initialization
+
+
 ************* OS/Linux ******************    
  
 process : program executed, becomes process. at least one thread executes concurrently.
