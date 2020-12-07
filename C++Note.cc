@@ -107,7 +107,7 @@ int (*p) () = foo; //pointer hold address of a function
 int (*f) () = nullptr;     //设foo的return是void               
 f = reinterpret_cast<int (*) ()> (foo);   //该句不会改foo,但改了what foo look like, 使得可在imcompatiable pointer types间互访问
 
-static object : begin of program, end of program, in data segment, init before main allocate and init once.
+static object : begin of program, end of program, in data segment, init before main allocate and init once. 线程安全的
 compiler 1)先allocate, 2) read declaration知道it's a function...
 linker 需要definition来check函数arguments match不match 
 
@@ -214,12 +214,19 @@ More on: https://blog.csdn.net/honglin_ren/article/details/35839979
 http://dreamrunner.org/blog/2014/08/07/C-multithreading-programming/
 
 多process如何互访：IPC 中的 share memory，通过 mmap 映射共享文件
+  share memory:内核有专门一块内存区供多个进程之间交换信息
+  信号量：一个大于等于0的整型变量，值代表可利用资源的数目，wait()减值，singal()加值，当值为0，阻塞调用它的进程，直到value再次大于0.
+  信号：像软件层上对中断机制的模拟，内核利用信号通知user space的进程发生了哪些系统事件
+
 多thread如何互访：全局变量，信号量，mutex,condition_variable
-
-信号量semaphore是一个在单核和多核之间都有效的同步手段。多核系统在很多场合 spin lock/自旋锁 比semaphore效率更高。因semaphore在同步时需要对进程进行休眠和唤醒的操作，耗资源。
+  信号量补充：semaphore是一个在单核和多核之间都有效的同步手段。多核系统在很多场合 spin lock/自旋锁 比semaphore效率更高。因semaphore在同步时需要对进程进行休眠和唤醒的操作，耗资源。
 spin lock 只有在多核系统上才有效，在单核上是没有用。当获取锁失败时,spinlock 不会让线程进入睡眠,而是不断 poll 去获取这个锁直到获取成功.
+  信号补充：unix 系统通过 signal 通知进程相关的系统事件。信号分为2类，异步信号（e.g. SIGINT）和同步信号（e.g. SIGSEGV）。
 
-unix 系统通过 signal 通知进程相关的系统事件。信号分为2类，异步信号（e.g. SIGINT）和同步信号（e.g. SIGSEGV）。
+main函数执行前会有哪些事情发生？
+1. pre-processor: 通过 include 找所有.h，看declaration，来保证没有重复，会进行所有对静态变量、全局变量和全局对象的构造以及初始化工作， 
+2. compile .C 去生成.O object files. it contain func definition with external linkage(visible to linker)
+3. 最后 linker link all .o to build executable program
 
 虚拟内存具有许多的优势和好处：
   可以支持多进程运行
