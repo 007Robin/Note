@@ -87,6 +87,11 @@ extern "C" {    //stop name mangling 阻止命名修饰
 } 
 global变量: visible to everyone in the program. initialized when task is loaded, usually the value is in the executable(可执行文件.cpp)。 
 define the global variables in source file, declare them "extern" in a header file. 
+.h
+int x;  <-- 加static 可避免报重复错误，static意思是只在我这个编译模块使用
+int func(){}  <-- 加inline 避免报重复错误，odr原则，
+a.cpp #include ""
+b.cpp #include ""
 
 stactic member function 可access static var/fuc，不可access instance var/fuc
 
@@ -178,6 +183,10 @@ Virtual destructor/Pure virtual destructors are legal, if a class contains a pur
 
 虚表是什么？多态里面，含virtual function的class，会有一张虚表，里面是存virtual pointer，这些virtual pointer指向子类实例。所以虚表是属于class的，不是instance的。                     
 怎么找虚表？在instance实例时会有个指向虚表的指针。
+B* p = new D();
+p->func();
+这两句具体发生了什么？
+More on: https://tangocc.github.io/2018/03/20/cpp-class-memory-struct/
 
 void task() {cout << "do some work" << endl;}
 std::thread t(task);    //create and start a thread to execute the task function
@@ -215,6 +224,43 @@ Pointers Disadvantage
   Ugly Ownership Issue(for deleting pointer)
   Does not allow for (RAII)Resource acquisition is initialization
 
+printf(%d) 按地址解析成int32位，%lld。
+
+什么是函数重载？ 函数名，参数列表，命名空间／域，const是名字修饰因素，为什么返回类型不是呢？
+class A
+{
+   void func(*this, int a);
+   void func(*this, int a) const; //此处const其实暗指 const *this
+};
+
+名字隐藏
+namespace ns1
+{
+    int func(){}               // A
+}
+
+namespace ns2
+{
+    void func(){}               // B
+    void func(int i){}          // C
+
+    namespace ns3
+    {
+        void func(double d){}   // D  注释了这句则F处回去调用上层C，但开放这句则会把之前的都名字隐藏
+        void run()
+        {
+            func(1);            // F
+            func();             // G
+        }
+    }
+}
+                     
+引用和指针的区别？
+class C {
+   int& ri;   
+   const int& rri; // reference member
+   C(const int& i, int ii) : ri(i), rri(ii) {} 
+};
 
 ************* OS/Linux ******************    
  
