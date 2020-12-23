@@ -69,6 +69,58 @@ sort array是前提，在sort的东西里search才可。
 	(需要先排序数组，得到的距离范围是[0, nums.back()-nums[0]]，对应模版[L,R]，用法同上，只是这次要在数组中找pair distance < mid的cnt数，
 我们借助辅助变量start，表示较小数字的索引号，遍历数组，将nums[i]于nums[start]做差，如果差值>mid, 则说明距离太大，我们需要缩短距离，所以start++，
 这样到nums[i]，nums[start]间数的距离<mid，退出循环，则统计 < mid的pair distance数便是cnt += i - start)
+
+215. Kth Largest Element in an Array	 
+* 快排 + 二分思想：
+确定个l,r 然后选个pivot, 
+while (l <= r) {
+	//把大于中枢点的数字放到左半边，小于中枢点的放在右半边,中枢点是整个数组中第几大的数字就确定了
+	if (nums[l] < pivot && nums[r] > pivot) {
+	//pivot在num[l],num[r]之间，交换num[l],num[r]， l,r各往中间凑一凑
+	swap(nums[l++], nums[r--]);
+	}
+	//左边维护比pivot大的，右边维护比pivot小的
+	if (nums[l] >= pivot) ++l;
+	if (nums[r] <= pivot) --r;
+}
+swap(nums[left], nums[r]);	//最后放pivot
+	
+* QuickSort O(nlogn)
+核心思想： 
+随意选中一个pivot调换到数组末尾，
+用start表示从左开始，都是比pivot小的数的索引下标, p则表示常规index,我们不断移动p，
+当有比pivot更小的则swap(v[p],v[start]), start++; 实现把小数安插到p左边
+没有，则不断p++，继续check。我们不关心每个半边是否有序，只先移成[左边小][pivot][右边大]的这种形式。
+最后swap(v[p],v[start])。这样经过一次Sort可以得到，以start为界限，左边是比pivot小的一些数，右边是比pivot大的数
+	 
+//get a pivot, sort once
+void SortOnce(vector<int>&v, int beg, int end) {
+	// get a pivot
+	if(beg >= end) return ;
+	int pos	= rand() % (end - beg) + beg;
+	swap(v[pos], v[end]);
+	int pivot = v[end];
+	
+	int start = beg;
+	int p = beg;
+	while(p < end) {
+		if(v[p] < pivot) {
+			swap(v[start], v[p]);
+			start++;
+		}
+		p++;
+	}
+	swap(v[start], v[p]);
+	
+	SortOnce(v, beg, start - 1);
+	SortOnce(v, start + 1, end);
+}
+void QuickSort(vector<int>& v) {
+	// number of elements
+	int n = v[0];
+	v.erase(v.begin());
+	SortOnce(v, 0, v.size() - 1);	
+}
 	 
 //****** Binary seach ****** O(logn)
 int binarysearch(int a[], int n, int target) {
@@ -99,3 +151,10 @@ int binarysearch2(int a[], int n, int target) {
 	if(a[R] == target) return R;
 	return -1;
 }
+
+array相关：	 
+239. Sliding Window Maximum
+维护一个长度为k的双头队列deque, 每个deque内放数字下标，其实是维护（i - q.front==k）
+当添加的新的数更大了，则从队列尾巴开始不断往前删元素，把比该值小的都删光，最后把该值插入队尾
+当每走k步即i >= k -1时,往结果集里加入此时当队头下标所指向的元素。
+
