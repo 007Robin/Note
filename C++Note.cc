@@ -341,6 +341,10 @@ Composition： 互相有强ownership，strong relationship
 eg: table&cell, windows create/own power to create/delete pane etc. 有种propagation
 
 ************* DB ******************
+select Student，avg(Score) 
+from A 
+group by Student
+
 reduncdency, inconsistency, security, integrity, concurrent access
 DDL: define
 DML: manipulate
