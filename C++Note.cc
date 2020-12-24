@@ -13,6 +13,10 @@ explicit关键字用到时，会取消一切隐含转换, 如函数参数中auto
 noexcept关键字，说明保证all correct, 让compiler最大去优化
 constexpr关键字，说明everything init／calculate／exec at compiler time, NO runtime, type safe compulation, 是const。 
 
+SFINE： applies during overload resolution of function templates: 
+When substituting the explicitly specified or deduced type for the template parameter fails, 
+the specialization is discarded from the overload set instead of causing a compile error.
+
 Const Type        :  value never changes, must init, 不可assigned。
 Volatile Type     : value may change unexpected (prevent variable optimistation), 可改，不许optimise  
 eg: volatile const int time{20201201};  
@@ -27,6 +31,8 @@ typedef/using: 造alias
 typedef unsigned int UI; UI a;
 using UI = unsigned int; UI a;    //more readable
 
+左值可以出现在赋值等号的左边，使用时取的是作为对象的身份；
+右值不可以出现在赋值等号的左边，使用时取的是对象的值。
 lvalue: refer to the address in memory of a variable  eg: += -= /= 5=, &=, ^=, <<=, >>=, ++, --的operand must be lvalue.
 rvalue: refer to value stored in a variable.          eg: 3
 array name不可用作lvalue， 因其没有memory，只是个reference to a location。
@@ -139,6 +145,18 @@ init at compile time
 declaration and defination must in the same .H file.
 https://eli.thegreenplace.net/2014/variadic-templates-in-c/
 https://www.modernescpp.com/index.php/c-insights-variadic-templates
+                     
+#include <type_traits>
+template <typename T, typename = int>
+struct HasX : std::false_type { };
+template <typename T>
+struct HasX <T, decltype((void) T::x, 0)> : std::true_type { };                     
+ https://stackoverflow.com/questions/1005476/how-to-detect-whether-there-is-a-specific-member-variable-in-class
+
+template<int> struct Fibonacci;
+template<> struct Fibonacci<0>{ static const int value = 0;};
+template<> struct Fibonacci<1>{static const int value = 1;};
+template<int i> struct Fibonacci{ static const int value = Fibonacci<i-1>::value + Fibonacci<i-2>::value;};                    
                      
 lambda function
 auto f = [local capture] (optinal_parameters)->optinal_return_type { body };
@@ -303,6 +321,12 @@ MessageQueue:
 https://github.com/007Robin/spmcqstudy/tree/main/SPMC_Queue_bak
 https://github.com/007Robin/PubSubQueue
 epoll,select,poll区别
+select,poll都需要最后轮询一遍fd,找到ready的那个，epoll是有个callback机制，直接对应到ready的fd.
+epoll_create(),epoll_ctl_ADD,epoll_ctl_DEL, epoll_wait()...
+
+栈溢出攻击？
+当某个数据超过了处理程序回传堆栈地址限制的范围时，程序出现的异常操作
+当把data的数据拷贝到buffer内时，超过缓冲区区域的高地址部分数据会“淹没”原本的其他栈帧数据
  
 ************* OO design ******************
 objects hold values/are instance of a class
