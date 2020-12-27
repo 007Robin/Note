@@ -328,6 +328,14 @@ epoll_create(),epoll_ctl_ADD,epoll_ctl_DEL, epoll_wait()...
 当某个数据超过了处理程序回传堆栈地址限制的范围时，程序出现的异常操作
 当把data的数据拷贝到buffer内时，超过缓冲区区域的高地址部分数据会“淹没”原本的其他栈帧数据
  
+如何接受请求？ 
+TCP -> 网卡 -> 中断 -> 内核cpu响应中断，读数据 -> 数据包到local频率高，cpu一直响应中断，可能一个数据包都处理不完。（内核默认都去cpu0）
+方法就是：分散CPU，使得多个cpu可以响应中断机制，同一个客户端的包得同一个cpu做处理，那种按序往下分配cpu的话，cpu之间交互使得性能差，上下文切换开销大。
+所以可以对srcIP, dstIP做hash，
+再深层：多线程 多进程 咋处理请求
+再深层：有个好一点的缓存热点信息的算法，决定放哪些数据，LRU。。。IO请求
+
+处理大量TCP数据流找出现频率最高的，思维上可以把一串string当成integer来看， 看数字重复情况即可。
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
