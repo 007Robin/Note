@@ -281,7 +281,9 @@ class C {
 };
 
 ************* OS/Linux ******************    
- 
+理解高性能、高并发：
+https://zhuanlan.zhihu.com/p/339016204?utm_source=wechat_session&utm_medium=social&utm_oi=75389560946688&utm_campaign=shareopn
+
 process : program executed, becomes process. at least one thread executes concurrently.
           provide resources needed to execute a program (address space, security context, environment variables)
           每个进程都有自己的内存地址空间.
