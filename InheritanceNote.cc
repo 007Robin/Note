@@ -176,9 +176,9 @@ class A1 : virtual public A {
 class A2 : virtual public A{
    // price 10
 };
-class B : A1, A2;    which price???
+class B : A1, A2;    which price??? -->  is price 10 from A2. if swap A1,A2, then is price 5 from A1.
 所以需要具体去解决constructor conflicts
-void 
+ 
 
 /********* static_cast vs. dynamic_cast *******/
 Animal *p;
