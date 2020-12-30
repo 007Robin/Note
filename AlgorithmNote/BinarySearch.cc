@@ -152,9 +152,18 @@ int binarysearch2(int a[], int n, int target) {
 	return -1;
 }
 
-array相关：	 
-239. Sliding Window Maximum
+Sliding Window相关：	 
+239. Sliding Window Maximum 求滑动窗户内最大值
 维护一个长度为k的双头队列deque, 每个deque内放数字下标，其实是维护（i - q.front==k）
 当添加的新的数更大了，则从队列尾巴开始不断往前删元素，把比该值小的都删光，最后把该值插入队尾
-当每走k步即i >= k -1时,往结果集里加入此时当队头下标所指向的元素。
+当每走k步即i >= k -1时，往结果集里加入此时，队头下标所指向的元素。
 
+3. Longest Substring Without Repeating Characters 最长无重复子串
+256位大小的整型数组，存字母和下标映射关系， res用来记录最长无重复子串的长度，left指向该无重复子串左边的起始位置， 计算最长无重复子串，i - left
+
+76. Minimum Window Substring 找S中最小子串，包含t中所有字母
+先扫描一遍T，把对应的字符及其出现的次数存到 256位大小的整型数组 中 ++letterCnt[c]，
+遍历S，不断把map中次数--，--letterCnt[s[i]]， 如果减1后仍大于等于0，计数器 cnt 自增1, 说明当前遍历到的字母是T串中的字母，
+当 cnt 和T串字母个数相等时，说明此时的窗口已经包含了T串中的所有字母，此时更新一个 minLen 和结果 res。
+然后收缩左边界，++letterCnt[s[left]]， 由于遍历的时候，对映射值减了1，所以此时去除字母的时候，就要把减去的1加回来，
+此时如果加1后的值大于0了，说明此时少了一个T中的字母，那么 cnt 值就要减1了，然后移动左边界 left。
