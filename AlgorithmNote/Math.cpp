@@ -1,6 +1,28 @@
 //2-d matrix seen as 1-d
 index: 0 ... row*col-1
-at index i, it's pos is matrix[i/col][i%col];
+at index i, it's pos is matrix[i / col][i % col];
+	
+//矩阵*运算   优化
+for(int i=0; i<2; i++){
+        for(int j=0; j<2; j++){
+                for(int k=0; k<2; k++){
+                    res0[i][j] += m1[i][k] * m2[k][j];
+                }
+        }
+}
+
+//j,k循环调换一下，外加check m1[i][k] != 0 
+for(int i=0; i<2; i++){
+        for(int k=0; k<2; k++){    
+            if(m1[i][k] != 0) {
+                for(int j=0; j<2; j++){
+                    res0[i][j] += m1[i][k] * m2[k][j];
+                }
+            }
+        }
+    }
+	
+	
 	
 //******* countPrime ********* O(nlog(logn))
 int countPrime(int n) {
