@@ -330,10 +330,12 @@ L3: 8~30Mb, 50-100 clock
 
 内存池：
 https://zhuanlan.zhihu.com/p/64719710
+
 MessageQueue:
 //single producer(writer) multiple consumer(reader) queue                     
 https://github.com/007Robin/spmcqstudy/tree/main/SPMC_Queue_bak
 https://github.com/007Robin/PubSubQueue
+
 epoll,select,poll区别
 select,poll都需要最后轮询一遍fd,找到ready的那个，epoll是有个callback机制，直接对应到ready的fd.
 epoll_create(),epoll_ctl_ADD,epoll_ctl_DEL, epoll_wait()...
@@ -350,6 +352,16 @@ TCP -> 网卡 -> 中断 -> 内核cpu响应中断，读数据 -> 数据包到loca
 再深层：有个好一点的缓存热点信息的算法，决定放哪些数据，LRU。。。IO请求
 
 处理大量TCP数据流找出现频率最高的，思维上可以把一串string当成integer来看， 看数字重复情况即可。
+
+Need to know:
+X86/GCC memory fence的一些见解               https://zhuanlan.zhihu.com/p/41872203   (LoadLoad, LoadStore, StoreLoad, StoreStore，只有StoreLoad组合可能乱序
+共享内存和文件内存映射的区别                    https://zhuanlan.zhihu.com/p/149277008  (mmap, tmpfs..
+C/C++ 中的 volatile                         https://zhuanlan.zhihu.com/p/33074506?utm_source=wechat_session&utm_medium=social&utm_oi=75389560946688&utm_campaign=shareopn
+从根上理解高性能、高并发(一)：深入计算机底层，理解线程与线程池    http://www.52im.net/thread-3272-1-1.html     https://zhuanlan.zhihu.com/p/339016204?utm_source=wechat_session&utm_medium=social&utm_oi=75389560946688&utm_campaign=shareopn
+Summary of C++ Thread Safety Singleton Patterns         https://programmer.ink/think/summary-of-c-thread-safety-singleton-patterns.html
+
+
+
 ************* OO design ******************
 objects hold values/are instance of a class
 objects can't change type during run-time
@@ -361,6 +373,7 @@ Aggregation： 互相有part relationship
 eg: student (attend) courses, but student 能自己掌握自己life
 Composition： 互相有强ownership，strong relationship
 eg: table&cell, windows create/own power to create/delete pane etc. 有种propagation
+
 
 ************* DB ******************
 select Student，avg(Score) 
