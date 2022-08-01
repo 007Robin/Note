@@ -10,6 +10,7 @@ method : retreives a pointer to the object receving message。如call method时(
 friend : No this pointer, object is passed explicity。
 
 explicit关键字用到时，会取消一切隐含转换, 如函数参数中auto call constructor, (string)"hello"中char[]转成char*
+  - eg:如有些代码，本质上是char *,可用reinterpret_cast转成any other pointer type,若你本来想打印其它pointer型，但log接受打印char *，则任何char*都有可能被打印出来。这种时候可以加explicit，取消隐含转换。
 noexcept关键字，说明保证all correct, 让compiler最大去优化
 constexpr关键字，说明everything init／calculate／exec at compiler time, NO runtime, type safe compulation, 是const。 
 
@@ -30,6 +31,26 @@ while(v){...} or while(Yes){...}
 typedef/using: 造alias
 typedef unsigned int UI; UI a;
 using UI = unsigned int; UI a;    //more readable
+  
+奇异模版案例：（编译时的polymorphism）
+template<type KIND>
+class People { KIND person; }
+class Student : People<Student> { void salary() {...} }
+class Teacher : People<Teacher> { void salary() {...} }
+People *a = new Student(); People *b = new Teacher(); 
+vector<People> {a,b};
+for(...)   //这种loop,术语叫dispatcher 
+  p->salary();
+
+C++ Callbacks (and giving member functions to C-style callbacks)
+  c-style callback: (void (*callback)(int num1, int num2))
+  c++: Callback<int(int,int)>::func = std::bind(&ClassWithCallback::method_to_callback, &my_class, std::placeholders::_1, std::placeholders::_2);
+  modern c++: (std::function<int(int, int)> callback) 
+   // Use a lambda to capture myClass and call the member method
+    libraryClass.passACallbackToMe([&myClass](int num1, int num2) -> int {
+        return myClass.methodToCallback(num1, num2);
+    })
+https://blog.mbedded.ninja/programming/languages/c-plus-plus/callbacks／
 
 左值可以出现在赋值等号的左边，使用时取的是作为对象的身份；
 右值不可以出现在赋值等号的左边，使用时取的是对象的值。
